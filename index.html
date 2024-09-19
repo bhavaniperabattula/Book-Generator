@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Book Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #e8f5e9; /* Light green background */
+        }
+
+        .book-box {
+            background-color: #98e0f8; /* Initial light blue background */
+            border: 2px solid #4caf50; /* Green border */
+            padding: 20px;
+            border-radius: 10px;
+            width: 50%;
+            margin: 50px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            word-wrap: break-word; /* Ensure long words don't overflow */
+            color: #000; /* Initial text color (black) */
+        }
+
+        .book-author {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .book-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .book-description {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            line-height: 1.6; /* Increased line height for better readability */
+            text-align: justify; /* Justify text for a clean look */
+        }
+
+        button {
+            padding: 12px 25px;
+            background-color: #f57c00; /* Vibrant orange for button */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background-color: #e64a19; /* Darker orange for hover effect */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="book-box" id="book-box">
+        <p class="book-author" id="author"></p>
+        <p class="book-title" id="title"></p>
+        <p class="book-description" id="description"></p>
+        <button id="generate">Generate New Book</button>
+    </div>
+
+    <script>
+        // Array of book objects
+        const books = [
+            {
+                title: "To Kill a Mockingbird",
+                description: "A novel about the serious issues of rape and racial inequality narrated by the young Scout Finch.",
+                author: "Harper Lee"
+            },
+            {
+                title: "1984",
+                description: "A dystopian novel set in a totalitarian society ruled by the Party and its leader, Big Brother.",
+                author: "George Orwell"
+            },
+            {
+                title: "Pride and Prejudice",
+                description: "A romantic novel that critiques the British landed gentry at the end of the 18th century.",
+                author: "Jane Austen"
+            },
+            {
+                title: "The Great Gatsby",
+                description: "A story of the mysteriously wealthy Jay Gatsby and his love for the beautiful Daisy Buchanan.",
+                author: "F. Scott Fitzgerald"
+            },
+            {
+                title: "Moby-Dick",
+                description: "An epic tale of the quest to hunt the elusive white whale, Moby Dick, narrated by Ishmael.",
+                author: "Herman Melville"
+            },
+            {
+                title: "The Catcher in the Rye",
+                description: "A novel about teenage angst and alienation, focusing on the experiences of Holden Caulfield.",
+                author: "J.D. Salinger"
+            },
+            {
+                title: "The Hobbit",
+                description: "A fantasy novel about Bilbo Baggins's adventures in Middle-earth, preceding the Lord of the Rings series.",
+                author: "J.R.R. Tolkien"
+            },
+            {
+                title: "Fahrenheit 451",
+                description: "A dystopian novel about a future where books are banned and 'firemen' burn any that are found.",
+                author: "Ray Bradbury"
+            },
+            {
+                title: "Brave New World",
+                description: "A dystopian novel that explores the dehumanizing effects of technological advancements and the loss of individuality.",
+                author: "Aldous Huxley"
+            }
+        ];
+
+        // Counter to keep track of current book index
+        let count = 0;
+
+        // Function to generate random background color
+        const getRandomColor = () => {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        };
+
+        // Function to calculate brightness of a hex color
+        const calculateBrightness = (hexColor) => {
+            hexColor = hexColor.replace('#', '');
+
+            // Convert hex to RGB
+            const r = parseInt(hexColor.substring(0, 2), 16);
+            const g = parseInt(hexColor.substring(2, 4), 16);
+            const b = parseInt(hexColor.substring(4, 6), 16);
+
+            // Calculate brightness using the formula
+            return (r * 0.299 + g * 0.587 + b * 0.114);
+        };
+
+        // Function to generate a new book and change background color
+        const generateBook = function() {
+            // Iterate through the books array
+            for (let i = 0; i < books.length; i++) {
+                if (i === count) {
+                    document.getElementById("author").innerHTML = books[i].author;
+                    document.getElementById("title").innerHTML = books[i].title;
+                    document.getElementById("description").innerHTML = books[i].description;
+                    break;
+                }
+            }
+
+            // Increment the count to cycle through books
+            count++;
+
+            // Reset the count if it exceeds the number of books
+            if (count >= books.length) {
+                count = 0; // Reset to the first book
+            }
+
+            // Generate and set random background color
+            const randomColor = getRandomColor();
+            document.getElementById("book-box").style.backgroundColor = randomColor;
+
+            // Check brightness and adjust text color accordingly
+            const brightness = calculateBrightness(randomColor);
+            const textColor = brightness > 128 ? '#000000' : '#FFFFFF'; // Light background = dark text, dark background = light text
+            document.getElementById("book-box").style.color = textColor;
+        };
+
+        // Generate a book when the page loads and on button click
+        window.onload = function() {
+            generateBook();
+            document.getElementById("generate").addEventListener('click', generateBook);
+        };
+    </script>
+
+</body>
+</html>
